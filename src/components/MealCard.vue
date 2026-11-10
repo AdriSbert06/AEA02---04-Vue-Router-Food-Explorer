@@ -17,7 +17,7 @@ defineProps({
   description: String
 });
 </script>
-
+    
 <style scoped>
 .card {
   background: #fff;

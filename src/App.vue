@@ -1,11 +1,21 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <NavigatorBar />
+
+  <Home />
 </template>
 
-<style scoped></style>
+<script setup>
+//import ProductsList from './components/ProductList.vue';
+import NavigatorBar from './components/NavigatorBar.vue';
+import Home from './views/Home.vue';
+</script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+</style>
