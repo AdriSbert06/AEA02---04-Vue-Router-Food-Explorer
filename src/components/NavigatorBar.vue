@@ -1,0 +1,1 @@
+<h1>Receptari Vue</h1>
