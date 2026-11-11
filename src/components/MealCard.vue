@@ -1,46 +1,52 @@
-<template>
-  <div class="card">
-    <img :src="thumbnail" class="thumb" />
-
-    <h3>{{ title }}</h3>
-    <p class="description">{{ description }}</p>
-
-    <div class="price">{{ price }} €</div>
-  </div>
-</template>
 
 <script setup>
 defineProps({
-  title: String,
-  thumbnail: String,
-  price: Number,
-  description: String
-});
+  meal: {
+    type: Object,
+    required: true
+  }
+})
 </script>
-    
+
+<template>
+  <div class="meal-card">
+
+    <img
+      :src="meal.strMealThumb"
+      :alt="meal.strMeal"
+    />
+
+    <h3>{{ meal.strMeal }}</h3>
+
+    <p>{{ meal.strArea }} - {{ meal.strCategory }}</p>
+
+    <RouterLink :to="`/meal/${meal.idMeal}`">
+      Receta
+    </RouterLink>
+
+  </div>
+</template>
+
 <style scoped>
-.card {
-  background: #fff;
-  padding: 1rem;
-  border-radius: 14px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.meal-card {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
-.thumb {
+.meal-card img {
   width: 100%;
-  border-radius: 10px;
+  height: 140px;
+  object-fit: cover;
 }
 
-.price {
-  font-weight: bold;
-  color: #2c7;
+.meal-card h3 {
+  font-size: 16px;
+  margin: 8px 0;
 }
 
-.description {
-  font-size: 0.9rem;
-  opacity: 0.8;
+.meal-card p {
+  font-size: 14px;
 }
 </style>

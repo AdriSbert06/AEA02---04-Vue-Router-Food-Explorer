@@ -1,3 +1,3 @@
 <template>
-    <h1>Receptari Vue</h1>
+    <h1>Receptari Vue + TheMealDB</h1>
 </template>
