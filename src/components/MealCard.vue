@@ -1,16 +1,19 @@
 
 <script setup>
 defineProps({
-  meal: {
-    type: Object,
-    required: true
-  }
-})
+  meal: Object,
+  idMeal: Number,
+  strMeal: String,
+  strCategory: String,
+  strArea: String,
+  strCountry: String,
+  strInstructions: String,
+  strMealThumb: String
+});
 </script>
 
 <template>
   <div class="meal-card">
-
     <img
       :src="meal.strMealThumb"
       :alt="meal.strMeal"
@@ -21,7 +24,7 @@ defineProps({
     <p>{{ meal.strArea }} - {{ meal.strCategory }}</p>
 
     <RouterLink :to="`/meal/${meal.idMeal}`">
-      Receta
+      Receptes
     </RouterLink>
 
   </div>

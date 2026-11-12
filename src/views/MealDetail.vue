@@ -1,91 +1,74 @@
-<template>
-  <main v-if="meal" class="detail-page">
+<script setup>
+import { computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useFetch } from '../composable/useFetch'
+import NavigatorBar from '../components/NavigatorBar.vue'
 
-    <img :src= "meal.imatge" :alt="meal.name" class="recipe-image" />
-    <h1>{{ meal.name }}</h1>
+const route = useRoute()
+
+const { data, error, loading, refetch } = useFetch(
+  `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${route.params.idMeal}`
+)
+
+const meal = computed(() => data.value?.meals?.[0] || null)
+
+const ingredients = computed(() => {
+  if (!meal.value) return []
+
+  const result = []
+
+  for (let i = 1; i <= 20; i++) {
+    const ingredient = meal.value[`strIngredient${i}`]
+    const measure = meal.value[`strMeasure${i}`]
+
+    if (ingredient && ingredient.trim()) {
+      result.push(`${ingredient} - ${measure}`)
+    }
+  }
+
+  return result
+})
+
+// Separar les instruccions
+const passos = computed(() => {
+  if (!meal.value?.strInstructions) return []
+
+  return meal.value.strInstructions
+    .split(/\r\n|\n/)
+    .map(step => step.trim())
+    .filter(step => step.length > 0)
+})
+</script>
+
+<template>
+  <NavigatorBar />
+
+  <p v-if="loading">Carregant recepta...</p>
+
+  <p v-else-if="error">{{ error }}</p>
+
+  <main v-else-if="meal" class="detail-page">
+
+    <img
+      :src="meal.strMealThumb"
+      :alt="meal.strMeal"
+      class="recipe-image"
+    />
+
+    <h1>{{ meal.strMeal }}</h1>
 
     <h2>Descripció:</h2>
-    <p>{{ meal.desc }}</p>
+    <p>{{ meal.strInstructions }}</p>
 
     <h2>Ingredients:</h2>
     <ul class="ingredients-list">
-      <li v-for="(ingredient, i) in meal.ingredients" :key="i">
+      <li v-for="(ingredient, i) in ingredients" :key="i">
         {{ ingredient }}
       </li>
     </ul>
-
-    <h2>Pas a pas:</h2>
-    <ol class="steps-list">
-      <li v-for="(pas, i) in meal.passos" :key="i">
-        {{ pas }}
-      </li>
-    </ol>
   </main>
+
   <p v-else>Recepta no trobada.</p>
 </template>
 
 
-<script setup>
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { meals } from '../recepta.js'
-
-const route = useRoute()
-
-const meal = computed(() => meals.value.find((item) => item.id === Number(route.params.id)))
-</script>
-
-<style scoped>
-.detail-page {
-  max-width: 720px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.detail-page a {
-  color: #28664d;
-}
-
-.detail-page h1 {
-  margin: 1.25rem 0 0.5rem;
-  color: #203d34;
-}
-
-.detail-page h2 {
-  margin: 1.5rem 0 0.5rem;
-  color: #203d34;
-  font-size: 1.2rem;
-}
-
-.detail-page p {
-  color: #47574f;
-  line-height: 1.6;
-}
-
-/* Listas */
-.ingredients-list,
-.steps-list {
-  padding-left: 1.5rem;
-  color: #47574f;
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.ingredients-list {
-  list-style: disc;
-}
-
-.steps-list {
-  list-style: decimal;
-}
-
-.ingredients-list li,
-.steps-list li {
-  margin-bottom: 0.5rem;
-}
-
-.steps-list li::marker {
-  font-weight: 700;
-  color: #358363;
-}
-</style>
